@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('correct_alternatives', function (Blueprint $table) {
             $table->id();
-            $table->foreign('question_id')->constrained('questions');
-            $table->foreign('alternative_id')->constrained('alternatives');
+            $table->foreignId('question_id')->constrained('questions');
+            $table->foreignId('alternative_id')->constrained('alternatives');
             $table->timestamps();
         });
     }

@@ -5,18 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Participants extends Model
+class AlternativesConfiguration extends Model
 {
     use HasFactory;
 
+    protected $table = 'alternatives_configuration';
+
     protected $fillable = [
         'name',
-        'age',
+        'color_name',
+        'color_hexadecimal',
+        'status',
     ];
-
-    public function answers()
-    {
-        return $this->hasMany(Answers::class);
-    }
-    
 }

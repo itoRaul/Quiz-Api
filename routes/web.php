@@ -1,17 +1,17 @@
 <?php
 
+use App\Livewire\AlternativeConfiguration;
+use App\Livewire\Question;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\ConfigurationForm;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('configurations', AlternativeConfiguration::class)->name('configurations.index');
+
+Route::get('configurations/create', ConfigurationForm::class)->name('configurations.create');
+
+Route::get('configurations/edit/{configuration}', ConfigurationForm::class)->name('configurations.edit');
+
+Route::get('question', Question::class);
 
 Route::get('/', function () {
     return view('welcome');

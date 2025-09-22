@@ -5,23 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class correctAlternatives extends Model
+class Answers extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'question_id',
+        'participant_id',
         'alternative_id',
     ];
 
-    public function question()
+    public function participant()
     {
-        return $this->belongsTo(questions::class);
+        return $this->belongsTo(Participants::class);
     }
 
     public function alternative()
     {
-        return $this->belongsTo(alternatives::class);
+        return $this->belongsTo(Alternatives::class);
     }
 
     

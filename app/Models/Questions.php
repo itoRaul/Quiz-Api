@@ -5,29 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class alternatives extends Model
+class Questions extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'name',
+        'sequence',
         'status',
-        'question_id',
     ];
 
-    public function question()
+    public function alternatives()
     {
-        return $this->belongsTo(questions::class);
-    }
-
-    public function answers()
-    {
-        return $this->hasOne(answers::class);
+        return $this->hasMany(Alternatives::class);
     }
 
     public function correctAlternatives()
     {
-        return $this->hasMany(correctAlternatives::class);
+        return $this->hasOne(CorrectAlternatives::class);
     }
 
     

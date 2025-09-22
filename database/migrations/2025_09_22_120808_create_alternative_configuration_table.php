@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answers', function (Blueprint $table) {
+        Schema::create('alternatives_configuration', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('participant_id')->constrained('participants');
-            $table->foreignId('alternative_id')->constrained('alternatives');
+            $table->string('name');
+            $table->string('color_name');
+            $table->string('color_hexadecimal');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answers');
+        Schema::dropIfExists('alternatives_configuration');
     }
 };
