@@ -38,7 +38,7 @@
                 @endforelse
             </tbody>
         </table>
-
+        <a href="{{ route('question') }}">Adicionar questão</a>
          @if ($formVisible)
         <div class="mt-8">
             <h4>{{ $isEditing ? 'Editar Configuração' : 'Criar Nova Configuração' }}</h4>

@@ -5,19 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Alternatives extends Model
+class Alternative extends Model
 {
     use HasFactory;
+
+    protected $table = 'alternatives';
     
     protected $fillable = [
         'name',
         'status',
         'question_id',
+        'alternatives_configuration_id',
     ];
 
     public function question()
     {
-        return $this->belongsTo(Questions::class);
+        return $this->belongsTo(Question::class);
     }
 
     public function answers()
@@ -25,10 +28,10 @@ class Alternatives extends Model
         return $this->hasOne(Answers::class);
     }
 
-    public function correctAlternatives()
+    public function alternativesConfiguration()
     {
-        return $this->hasMany(CorrectAlternatives::class);
+        return $this->belongsTo(AlternativeConfiguration::class);
     }
-
+    
     
 }

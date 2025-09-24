@@ -3,9 +3,10 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\AlternativesConfiguration;
+use App\Models\AlternativeConfiguration;
+use App\Services\ConfigurationService;
 
-class AlternativeConfiguration extends Component
+class AlternativesConfiguration extends Component
 {
     public bool $formVisible = false;
 
@@ -43,7 +44,7 @@ class AlternativeConfiguration extends Component
 
     public function edit($id)
     {
-        $config = AlternativesConfiguration::findOrFail($id);
+        $config = AlternativeConfiguration::findOrFail($id);
 
         $this->configId = $config->id;
         $this->name = $config->name;
@@ -65,25 +66,33 @@ class AlternativeConfiguration extends Component
     {
         $validatedData = $this->validate();
 
-        AlternativesConfiguration::updateOrCreate(
-            ['id' => $this->configId],
-            $validatedData
-        );
+        $configurationService = new ConfigurationService();
 
-        session()->flash('message', 'Configuração salva com sucesso.');
-        $this->resetFields(); 
+        if ($this->isEditing) {
+            $result = $configurationService->update($validatedData, $this->configId);
+        } else {
+            $result = $configurationService->store($validatedData);
+        }
+
+        if ($result['success']) {
+            session()->flash('message', $result['message']);
+        } else {
+            session()->flash('error', $result['message']);
+        }
+
+        $this->resetFields();
     }
 
     public function delete($id)
     {
-        AlternativesConfiguration::find($id)?->delete();
+        AlternativeConfiguration::find($id)?->delete();
         session()->flash('message', 'Configuração deletada com sucesso.');
     }
 
     public function render()
     {
         return view('livewire.alternative-configuration', [
-            'configurations' => AlternativesConfiguration::orderBy('id', 'asc')->get()
+            'configurations' => AlternativeConfiguration::orderBy('id', 'asc')->get()
         ]);
     }
 }

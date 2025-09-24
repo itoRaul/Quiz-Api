@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('question_id')->constrained('questions');
+            $table->foreignId('alternatives_configuration_id')->constrained('alternatives_configuration');
             $table->boolean('status')->default(true);
             $table->timestamps();
         });

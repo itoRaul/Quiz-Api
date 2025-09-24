@@ -21,7 +21,7 @@ class Answers extends Model
 
     public function alternative()
     {
-        return $this->belongsTo(Alternatives::class);
+        return $this->belongsTo(Alternative::class);
     }
 
     

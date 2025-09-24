@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AlternativesConfiguration extends Model
+class AlternativeConfiguration extends Model
 {
     use HasFactory;
 
@@ -17,4 +17,9 @@ class AlternativesConfiguration extends Model
         'color_hexadecimal',
         'status',
     ];
+
+    public function alternatives()
+    {
+        return $this->hasOne(Alternative::class);
+    }
 }

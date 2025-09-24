@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Questions extends Model
+class Question extends Model
 {
     use HasFactory;
 
@@ -17,7 +17,7 @@ class Questions extends Model
 
     public function alternatives()
     {
-        return $this->hasMany(Alternatives::class);
+        return $this->hasMany(Alternative::class, 'question_id', 'id');
     }
 
     public function correctAlternatives()
