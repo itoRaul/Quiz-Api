@@ -13,6 +13,7 @@ class Question extends Model
         'name',
         'sequence',
         'status',
+        'alternative_correct',
     ];
 
     public function alternatives()
@@ -22,7 +23,7 @@ class Question extends Model
 
     public function correctAlternatives()
     {
-        return $this->hasOne(CorrectAlternatives::class);
+        return $this->hasMany(CorrectAlternative::class);
     }
 
     

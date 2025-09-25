@@ -18,7 +18,7 @@ class AlternativeConfiguration extends Model
         'status',
     ];
 
-    public function alternatives()
+    public function alternative()
     {
         return $this->hasOne(Alternative::class);
     }

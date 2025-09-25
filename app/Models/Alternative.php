@@ -23,14 +23,14 @@ class Alternative extends Model
         return $this->belongsTo(Question::class);
     }
 
-    public function answers()
+    public function answer()
     {
-        return $this->hasOne(Answers::class);
+        return $this->hasOne(Answer::class);
     }
 
-    public function alternativesConfiguration()
+    public function alternativeConfiguration()
     {
-        return $this->belongsTo(AlternativeConfiguration::class);
+        return $this->belongsTo(AlternativeConfiguration::class, 'alternatives_configuration_id', 'id');
     }
     
     

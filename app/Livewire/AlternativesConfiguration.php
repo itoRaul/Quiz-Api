@@ -28,6 +28,16 @@ class AlternativesConfiguration extends Component
         ];
     }
 
+    public function messages(){
+        return [
+            'name.required' => 'O campo Nome é obrigatório.',
+            'name.max' => 'O campo Nome deve ter no máximo 1 caractere.',
+            'color_name.required' => 'O campo Nome da Cor é obrigatório.',
+            'color_name.max' => 'O campo Nome da Cor deve ter no máximo 255 caracteres.',
+            'color_hexadecimal.required' => 'O campo Cor Hexadecimal é obrigatório.',
+        ];
+    }
+
     public function resetFields()
     {
         $this->reset(['configId', 'name', 'color_name', 'color_hexadecimal', 'status', 'isEditing', 'formVisible']);

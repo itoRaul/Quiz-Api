@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\AlternativesConfiguration;
+use App\Models\AlternativeConfiguration;
 use Illuminate\Database\Seeder;
 
 class AlternativeConfigurationSeeder extends Seeder
@@ -13,28 +13,28 @@ class AlternativeConfigurationSeeder extends Seeder
     public function run(): void
     {
         
-        AlternativesConfiguration::create([
+        AlternativeConfiguration::create([
             'name' => 'A',
             'color_name' => 'Azul',
             'color_hexadecimal' => '#4A90E2',
             'status' => true,
         ]);
 
-        AlternativesConfiguration::create([
+        AlternativeConfiguration::create([
             'name' => 'B',
             'color_name' => 'Verde',
             'color_hexadecimal' => '#7ED321',
             'status' => true,
         ]);
 
-        AlternativesConfiguration::create([
+        AlternativeConfiguration::create([
             'name' => 'C',
             'color_name' => 'Vermelho',
             'color_hexadecimal' => '#D0021B',
             'status' => true,
         ]);
 
-        AlternativesConfiguration::create([
+        AlternativeConfiguration::create([
             'name' => 'D',
             'color_name' => 'Amarelo',
             'color_hexadecimal' => '#F5A623',

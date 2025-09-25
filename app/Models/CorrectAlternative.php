@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CorrectAlternatives extends Model
+class CorrectAlternative extends Model
 {
     use HasFactory;
 
@@ -16,12 +16,12 @@ class CorrectAlternatives extends Model
 
     public function question()
     {
-        return $this->belongsTo(Questions::class);
+        return $this->belongsTo(Question::class);
     }
 
     public function alternative()
     {
-        return $this->belongsTo(Alternatives::class);
+        return $this->belongsTo(Alternative::class);
     }
 
     

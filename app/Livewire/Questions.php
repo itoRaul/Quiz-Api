@@ -25,6 +25,16 @@ class Questions extends Component
         'correctAlternativeIndex' => 'required',
     ];
 
+    public function messages(){
+        return [
+            'name.required' => 'O campo Nome é obrigatório.',
+            'name.max' => 'O campo Nome deve ter no máximo 255 caracteres.',
+            'alternatives.required' => 'O campo Alternativas é obrigatório.',
+            'alternatives.min' => 'O campo Alternativas deve ter no mínimo 4 itens.',
+            'correctAlternativeIndex.required' => 'O campo Alternativa Correta é obrigatório.',
+        ];
+    }
+
     public function mount ()
     {
         $this->questions = Question::all();
@@ -45,15 +55,59 @@ class Questions extends Component
         $this->resetErrorBag();
     }
 
+    public function edit($id)
+    {
+        $question = Question::with('alternatives')->findOrFail($id);
+        $this->resetErrorBag();
+
+        $this->question_id = $question->id;
+        $this->name = $question->name;
+        
+        $this->alternatives = [];
+        foreach ($question->alternatives as $alternative) {
+            $this->alternatives[$alternative->alternatives_configuration_id] = [
+                'text' => $alternative->name
+            ];
+        }
+        
+        $this->correctAlternativeIndex = $question->alternative_correct;
+        $this->formVisible = true;
+        $this->isEditing = true;
+    }
+
+    public function cancelForm()
+    {
+        $this->reset(['name', 'alternatives', 'correctAlternativeIndex', 'isEditing', 'formVisible', 'question_id']);
+        $this->resetErrorBag();
+    }
+
+
+    public function delete($id)
+    {
+        try {
+            $questionService = new QuestionService();
+            $result = $questionService->delete($id);
+
+            if ($result['success']) {
+                session()->flash('message', $result['message']);
+                $this->reset();
+                $this->mount();
+            } else {
+                session()->flash('error', $result['message']);
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Ocorreu um erro ao excluir a questão: ' . $e->getMessage());
+        }
+    }
+
     public function save()
     {
         $this->validate();
         
-        try{
+        try {
             $questionService = new QuestionService();
 
-            if($this->question_id){
-            
+            if ($this->isEditing && $this->question_id) {
                 $result = $questionService->update([
                     'name' => $this->name,
                     'alternatives' => $this->alternatives,
@@ -70,11 +124,10 @@ class Questions extends Component
                 return;
 
             } else {
-
                 $result = $questionService->store([
-                'name' => $this->name,
-                'alternatives' => $this->alternatives,
-                'correctAlternativeIndex' => $this->correctAlternativeIndex
+                    'name' => $this->name,
+                    'alternatives' => $this->alternatives,
+                    'correctAlternativeIndex' => $this->correctAlternativeIndex
                 ]);
 
                 if ($result['success']) {
@@ -87,11 +140,9 @@ class Questions extends Component
             }
 
         } catch (\Exception $e) {
-            
+            session()->flash('error', 'Ocorreu um erro ao salvar a questão: ' . $e->getMessage());
         }
-       
     }
-
 
     public function render()
     {

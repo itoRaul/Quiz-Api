@@ -1,10 +1,23 @@
 <div>
+    @if (session()->has('message'))
+        <div>
+            {{ session('message') }}
+        </div>
+    @endif
+    
+    @if (session()->has('error'))
+        <div>
+            {{ session('error') }}
+        </div>
+    @endif
+
     <button wire:click="create">NOVO</button>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Título</th>
+                    <th>Alternativas</th>
                     <th>Alternativa Correta</th>
                 </tr>
             </thead>
@@ -13,17 +26,24 @@
                     <tr>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->name }}</td>
+                        <td>
+                            @foreach ($item->alternatives as $alternative)
+                                {{ $alternative->name }},
+                            @endforeach
+                        </td>
                         <td>{{ $item->alternative_correct }}</td>
-                        <td>@foreach ($item->alternatives as $alternative)
-                        {{ $alternative->name }},
-                        
-                        @endforeach</td>
+                        <td></td>
+                        <td>
+                            <button wire:click="edit({{ $item->id }})">EDITAR</button>
+                            <button wire:click="delete({{ $item->id }})">EXCLUIR</button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
         @if ($formVisible)
+            <h3>{{ $isEditing ? 'Editar Questão' : 'Nova Questão' }}</h3>
             <form wire:submit.prevent="save">
                 @if (session()->has('success'))
                     <div style="color: green;">{{ session('success') }}</div>
@@ -35,7 +55,7 @@
                 <div>
                     <label for="title">Título da Questão:</label>
                     <input type="text" id="title" wire:model.defer="name">
-                    @error('title') <span style="color: red;">{{ $message }}</span> @enderror
+                    @error('name') <span style="color: red;">{{ $message }}</span> @enderror
                 </div>
 
                 <hr>
@@ -65,7 +85,8 @@
 
                 <hr>
 
-                <button type="submit">Salvar Questão</button>
+                <button type="submit">{{ $isEditing ? 'Atualizar Questão' : 'Salvar Questão' }}</button>
+                <button type="button" wire:click="cancelForm">Cancelar</button>
                 <br>
                 <a href="{{ route('configurations.index') }}">Configurar alternativas</a>
             </form>

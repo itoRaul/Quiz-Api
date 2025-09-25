@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Answers extends Model
+class Answer extends Model
 {
     use HasFactory;
 
@@ -16,7 +16,7 @@ class Answers extends Model
 
     public function participant()
     {
-        return $this->belongsTo(Participants::class);
+        return $this->belongsTo(Participant::class);
     }
 
     public function alternative()
