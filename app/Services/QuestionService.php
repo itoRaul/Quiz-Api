@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class QuestionService
 {
-
     public function store($request)
     {
         try {
@@ -24,11 +23,11 @@ class QuestionService
             ]);
 
             $createdAlternatives = [];
-            foreach ($request['alternatives'] as $configId => $alternative) {
-                $createdAlternatives[$configId] = Alternative::create([
+            foreach ($request['alternatives'] as $index => $alternative) {
+                $createdAlternatives[$index] = Alternative::create([
                     'name' => $alternative['text'],
                     'question_id' => $question->id,
-                    'alternatives_configuration_id' => $configId,
+                    'alternatives_configuration_id' => $index,
                     'status' => true,
                 ]);
             }
@@ -39,7 +38,7 @@ class QuestionService
                     'alternative_id' => $createdAlternatives[$request['correctAlternativeIndex']]->id,
                 ]);
             }
-            
+
             DB::commit();
 
             return [
@@ -47,10 +46,9 @@ class QuestionService
                 'message' => 'Questão salva com sucesso.',
                 'question' => $question->load(['alternatives', 'correctAlternatives'])
             ];
-
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return [
                 'success' => false,
                 'message' => 'Ocorreu um erro ao salvar a questão.',
@@ -97,10 +95,9 @@ class QuestionService
                 'message' => 'Questão editada com sucesso.',
                 'question' => $question->load(['alternatives', 'correctAlternatives'])
             ];
-
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return [
                 'success' => false,
                 'message' => 'Ocorreu um erro ao editar a questão.',
@@ -115,11 +112,11 @@ class QuestionService
             DB::beginTransaction();
 
             $question = Question::findOrFail($id);
-            
+
             $question->correctAlternatives()->delete();
-            
+
             $question->alternatives()->delete();
-            
+
             $question->delete();
 
             DB::commit();
@@ -128,10 +125,9 @@ class QuestionService
                 'success' => true,
                 'message' => 'Questão excluída com sucesso.',
             ];
-
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return [
                 'success' => false,
                 'message' => 'Ocorreu um erro ao excluir a questão.',
