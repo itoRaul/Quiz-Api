@@ -9,16 +9,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/auth/questoes', [QuestionController::class, 'allQuestions']); //->middleware('auth.basic');
+Route::prefix('quiz')->group(function () {
+    Route::prefix('questoes')->group(function () {
+        //Route::get('/', [QuestionController::class, 'allQuestions']);
+        Route::get('/', [QuestionController::class, 'onlyQuestions']);
+        Route::post('/', [QuestionController::class, 'createQuestion']);
+        Route::put('/{id}', [QuestionController::class, 'editQuestion']);
+        Route::delete('/{id}', [QuestionController::class, 'deleteQuestion']);
+    });
 
-Route::post('/auth/criarquestao', [QuestionController::class, 'createQuestion']);
-
-Route::put('/auth/editarquestao/{id}', [QuestionController::class, 'editQuestion']);
-
-Route::delete('/auth/deletarquestao/{id}', [QuestionController::class, 'deleteQuestion']);
-
-Route::post('/auth/criarconfiguracao', [ConfigurationController::class, 'createConfiguration']);
-
-Route::put('/auth/editarconfiguracao/{id}', [ConfigurationController::class, 'editConfiguration']);
-
-Route::delete('/auth/deletarconfiguracao/{id}', [ConfigurationController::class, 'deleteConfiguration']);
+    Route::prefix('configuracoes')->group(function () {
+        Route::get('/', [ConfigurationController::class, 'allConfigurations']);
+        Route::post('/', [ConfigurationController::class, 'createConfiguration']);
+        Route::put('/{id}', [ConfigurationController::class, 'editConfiguration']);
+        Route::delete('/{id}', [ConfigurationController::class, 'deleteConfiguration']);
+    });
+});

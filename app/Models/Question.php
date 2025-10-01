@@ -25,6 +25,4 @@ class Question extends Model
     {
         return $this->hasMany(CorrectAlternative::class);
     }
-
-    
 }

@@ -72,4 +72,21 @@ class QuestionController extends Controller
             return response()->json($result, 400);
         }
     }
+
+    public function onlyQuestions()
+    {
+        try {
+            $questionService = new QuestionService();
+            $result = $questionService->getOnlyQuestions();
+
+            return response()->json([
+                'data' => $result,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao buscar as configurações.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

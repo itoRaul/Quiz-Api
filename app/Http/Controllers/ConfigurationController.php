@@ -63,4 +63,21 @@ class ConfigurationController extends Controller
             return response()->json($result, 400);
         }
     }
+
+    public function allConfigurations()
+    {
+        try {
+            $configurationService = new ConfigurationService();
+            $result = $configurationService->getAll();
+
+            return response()->json([
+                'data' => $result,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao buscar as configurações.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

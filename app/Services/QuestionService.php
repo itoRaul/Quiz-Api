@@ -154,4 +154,30 @@ class QuestionService
             ];
         });
     }
+
+    public function getOnlyQuestions()
+    {
+        try {
+            $questions = Question::where('status', true)->with(['alternatives', 'correctAlternatives'])->get()->map(function ($question) {
+                return [
+                    'id' => $question->id,
+                    'question' => $question->name,
+                    'options' => $question->alternatives->map(function ($alt) {
+                        return [
+                            'text' => $alt->name,
+                        ];
+                    })->toArray(),
+                    'correctAnswer' => $question->alternative_correct,
+                ];
+            });
+
+            return $questions;
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Ocorreu um erro ao buscar as questões.',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }

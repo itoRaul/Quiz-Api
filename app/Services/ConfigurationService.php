@@ -95,4 +95,19 @@ class ConfigurationService
             ];
         }
     }
+
+    public function getAll()
+    {
+        try {
+            $configurations = AlternativeConfiguration::all();
+
+            return $configurations;
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Erro ao buscar as configurações.',
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }
