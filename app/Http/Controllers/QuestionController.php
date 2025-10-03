@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlternativeConfiguration;
 use App\Services\QuestionService;
 use Illuminate\Http\Request;
 
@@ -18,11 +19,11 @@ class QuestionController extends Controller
 
     public function createQuestion(Request $request)
     {
-        $name = $request->name;
-        $alternatives = $request->alternatives;
-        $sequence = $request->sequence;
-        $correctAlternativeIndex = $request->correctAlternativeIndex;
-        $status = $request->status;
+        $name = $request->input('name');
+        $alternatives = $request->input('alternatives');
+        $sequence = $request->input('sequence');
+        $correctAlternativeIndex = $request->input('correctAlternativeIndex');
+        $status = $request->input('status');
         $questionService = new QuestionService();
         $result = $questionService->store([
             'name' => $name,
@@ -81,6 +82,7 @@ class QuestionController extends Controller
 
             return response()->json([
                 'data' => $result,
+                'alternatives_configuration' => AlternativeConfiguration::all(),
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

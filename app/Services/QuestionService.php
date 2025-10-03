@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\AlternativeConfiguration;
 use App\Models\Alternative;
 use App\Models\Question;
 use App\Models\CorrectAlternative;
@@ -15,27 +16,25 @@ class QuestionService
         try {
             DB::beginTransaction();
 
+            $configIds = AlternativeConfiguration::where('status', true)->orderBy('id')->pluck('id');
+
             $question = Question::create([
                 'name' => $request['name'],
                 'sequence' => 1,
-                'alternative_correct' => isset($request['correctAlternativeIndex']) ? $request['correctAlternativeIndex'] : null,
+                'alternative_correct' => $request['correctAlternativeIndex'] ?? null,
                 'status' => true,
             ]);
 
             $createdAlternatives = [];
             foreach ($request['alternatives'] as $index => $alternative) {
+
+                $correctConfigId = $configIds->get($index - 1);
+
                 $createdAlternatives[$index] = Alternative::create([
                     'name' => $alternative['text'],
                     'question_id' => $question->id,
-                    'alternatives_configuration_id' => $index,
+                    'alternatives_configuration_id' => $correctConfigId,
                     'status' => true,
-                ]);
-            }
-
-            if (isset($request['correctAlternativeIndex']) && isset($createdAlternatives[$request['correctAlternativeIndex']])) {
-                CorrectAlternative::create([
-                    'question_id' => $question->id,
-                    'alternative_id' => $createdAlternatives[$request['correctAlternativeIndex']]->id,
                 ]);
             }
 
@@ -62,30 +61,44 @@ class QuestionService
         try {
             DB::beginTransaction();
 
+            $configIds = AlternativeConfiguration::where('status', true)->orderBy('id')->pluck('id');
+
             $question = Question::findOrFail($id);
 
             $question->update([
                 'name' => $request['name'],
-                'alternative_correct' => isset($request['correctAlternativeIndex']) ? $request['correctAlternativeIndex'] : null,
+                'alternative_correct' => $request['correctAlternativeIndex'] ?? null,
             ]);
 
             $question->correctAlternatives()->delete();
             $question->alternatives()->delete();
 
             $createdAlternatives = [];
-            foreach ($request['alternatives'] as $configId => $alternative) {
-                $createdAlternatives[$configId] = $question->alternatives()->create([
+            foreach ($request['alternatives'] as $index => $alternative) {
+
+                $correctConfigId = $configIds->get($index - 1);
+
+                $createdAlternatives[$index] = $question->alternatives()->create([
                     'name' => $alternative['text'],
-                    'alternatives_configuration_id' => $configId,
+                    'alternatives_configuration_id' => $correctConfigId,
                     'status' => true,
                 ]);
             }
 
-            if (isset($request['correctAlternativeIndex']) && isset($createdAlternatives[$request['correctAlternativeIndex']])) {
-                CorrectAlternative::create([
-                    'question_id' => $question->id,
-                    'alternative_id' => $createdAlternatives[$request['correctAlternativeIndex']]->id,
-                ]);
+            if (isset($request['correctAlternativeIndex'])) {
+                $correctConfig = AlternativeConfiguration::where('name', $request['correctAlternativeIndex'])->first();
+
+                if ($correctConfig) {
+                    foreach ($createdAlternatives as $createdAlternative) {
+                        if ($createdAlternative->alternatives_configuration_id == $correctConfig->id) {
+                            CorrectAlternative::create([
+                                'question_id' => $question->id,
+                                'alternative_id' => $createdAlternative->id,
+                            ]);
+                            break;
+                        }
+                    }
+                }
             }
 
             DB::commit();
